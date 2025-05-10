@@ -82,30 +82,11 @@ class _MyExpensesState extends State<MyExpenses> {
       appBar: AppBar(
         title: Text(
           "My Expenses",
-          style: TextStyle(
-            fontSize: 25,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
         ),
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
       body: Column(
         children: [
-          Container(
-            margin: const EdgeInsets.all(10.0),
-            width: double.infinity,
-            height: 200,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: const Color.fromARGB(255, 143, 123, 145),
-              // image: DecorationImage(
-              //   image: NetworkImage(
-              //       "https://user-images.githubusercontent.com/54882818/130562917-33168e1a-beba-410a-a986-0fff4f117a6b.png"),
-              // ),
-            ),
-            child: const Chart(),
-          ),
           StreamBuilder<QuerySnapshot>(
             stream: _getExpenses(),
             builder: (context, snapshot) {
@@ -211,30 +192,6 @@ class _MyExpensesState extends State<MyExpenses> {
           )
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(context, MaterialPageRoute(
-            builder: (context) {
-              return AddExpense();
-            },
-          ));
-        },
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(50),
-          side: BorderSide(
-            color: Colors.white,
-            width: 3,
-          ),
-        ),
-        backgroundColor: const Color.fromARGB(255, 250, 13, 246),
-        child: Icon(Icons.add),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        height: 50,
-        color: Theme.of(context).colorScheme.primary,
-        child: Container(),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }

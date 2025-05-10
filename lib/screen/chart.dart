@@ -63,36 +63,63 @@ class _ChartState extends State<Chart> {
       case 'Other':
         return const Color.fromARGB(255, 243, 33, 184);
       default:
-        return Colors.grey;
+        return const Color.fromARGB(255, 59, 19, 187);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(4),
+      padding: const EdgeInsets.all(4),
       child: categoryData.isEmpty
-          ? Center(child: CircularProgressIndicator())
-          : Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: PieChart(
-                PieChartData(
-                  sections: categoryData.entries.map(
-                    (entry) {
-                      return PieChartSectionData(
-                        title: entry.key,
-                        value: entry.value,
-                        color: getColorForCategory(entry.key),
-                        titleStyle: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      );
-                    },
-                  ).toList(),
+          ? const Center(child: CircularProgressIndicator())
+          : Column(
+              children: [
+                // Pie Chart
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: PieChart(
+                      PieChartData(
+                        sections: categoryData.entries.map(
+                          (entry) {
+                            return PieChartSectionData(
+                              title: '', // Hide labels inside the chart
+                              value: entry.value,
+                              color: getColorForCategory(entry.key),
+                            );
+                          },
+                        ).toList(),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+                // Custom Legend
+                Wrap(
+                  spacing: 8.0, // Space between items horizontally
+                  runSpacing: 8.0, // Space between items vertically
+                  children: categoryData.entries.map((entry) {
+                    return Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 16,
+                          height: 16,
+                          color: getColorForCategory(entry.key), // Square color
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          entry.key,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    );
+                  }).toList(),
+                ),
+              ],
             ),
     );
   }

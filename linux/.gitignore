@@ -1,1 +1,69 @@
-flutter/ephemeral
+# Flutter/Dart specific
+.dart_tool/
+.packages
+.pub-cache/
+build/
+flutter_export_environment.sh
+flutter_export_environment.bat
+
+# iOS specific
+ios/Flutter/.last_build_id
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/App.framework
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/ServiceDefinitions.json
+*.xcworkspace
+*.xcuserstate
+*.lock
+DerivedData/
+*.hmap
+
+# Android specific
+android/.gradle/
+android/app/build/
+android/local.properties
+android/.idea/
+*.iml
+
+# VS Code specific
+.vscode/
+*.code-workspace
+
+# IntelliJ/Android Studio specific
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# macOS specific
+.DS_Store
+
+# Windows specific
+Thumbs.db
+*.exe
+*.dll
+*.bat
+*.pdb
+*.obj
+*.userprefs
+
+# Linux specific
+*.so
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.swp
+*.lock
+*.bak
+*.old
+*.orig
+
+# Firebase specific
+firebase_app_id_file.json
+
+flutter_expense_tracker_app/

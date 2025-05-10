@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:my_expense_tracker_app/screen/home_screen.dart';
 import 'package:my_expense_tracker_app/screen/my_expenses.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 var kColorScheme = ColorScheme.fromSeed(
   seedColor: const Color.fromARGB(255, 236, 10, 229),
@@ -19,27 +21,118 @@ void main() async {
     MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData().copyWith(
-          colorScheme: kColorScheme,
-          appBarTheme: const AppBarTheme().copyWith(
-            backgroundColor: kColorScheme.onPrimaryContainer,
-            foregroundColor: kColorScheme.primaryContainer,
+        colorScheme: kColorScheme,
+        appBarTheme: const AppBarTheme().copyWith(
+          backgroundColor: kColorScheme.onPrimaryContainer,
+          foregroundColor: kColorScheme.primaryContainer,
+        ),
+        scaffoldBackgroundColor: const Color.fromARGB(255, 245, 245, 245),
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData().copyWith(
+          backgroundColor: kColorScheme.primaryContainer,
+          selectedItemColor: kColorScheme.onPrimaryContainer,
+          unselectedItemColor:
+              kColorScheme.onPrimaryContainer.withValues(alpha: 0.5),
+        ),
+        cardTheme: const CardTheme().copyWith(
+          color: kColorScheme.secondaryContainer,
+          margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: kColorScheme.primary, // Button background color
+            foregroundColor: kColorScheme.primaryContainer, // Text color
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20), // Rounded corners
+              side: const BorderSide(
+                color: Colors.white, // White border color
+                width: 2, // Border width
+              ),
+            ),
           ),
-          cardTheme: const CardTheme().copyWith(
-            color: kColorScheme.secondaryContainer,
-            margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        ),
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+          backgroundColor: kColorScheme.primary,
+          foregroundColor: kColorScheme.primaryContainer,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(50),
+            side: const BorderSide(
+              color: Colors.white,
+              width: 3,
+            ),
           ),
-          elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ElevatedButton.styleFrom(
-                backgroundColor: kColorScheme.primaryContainer),
+        ),
+        iconTheme: const IconThemeData().copyWith(
+          color: kColorScheme.onPrimaryContainer,
+        ),
+        textTheme: GoogleFonts.robotoTextTheme(
+          ThemeData.light().textTheme,
+        ).copyWith(
+          titleLarge: GoogleFonts.lato(
+            textStyle: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: kColorScheme.primaryContainer,
+              fontSize: 30,
+            ),
           ),
-          textTheme: ThemeData().textTheme.copyWith(
-                titleLarge: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: kColorScheme.onSecondaryContainer,
-                  fontSize: 14,
-                ),
-              )),
-      home: const MyExpenses(),
+          bodyMedium: GoogleFonts.lato(
+            textStyle: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: kColorScheme.primary,
+              fontSize: 25,
+            ),
+          ),
+        ),
+      ),
+      darkTheme: ThemeData().copyWith(
+        colorScheme: kDarkColorScheme,
+        appBarTheme: AppBarTheme(
+          backgroundColor: kDarkColorScheme.onPrimaryContainer,
+          foregroundColor: kDarkColorScheme.primaryContainer,
+        ),
+        scaffoldBackgroundColor: const Color.fromARGB(3, 30, 30, 30),
+        bottomNavigationBarTheme: BottomNavigationBarThemeData(
+          backgroundColor: kDarkColorScheme.primaryContainer,
+          selectedItemColor: kDarkColorScheme.onPrimaryContainer,
+          unselectedItemColor:
+              kDarkColorScheme.onPrimaryContainer.withOpacity(0.5),
+        ),
+        cardTheme: CardTheme(
+          color: kDarkColorScheme.secondaryContainer,
+          margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: kDarkColorScheme.primaryContainer,
+          ),
+        ),
+        textTheme: GoogleFonts.robotoTextTheme(
+          ThemeData.light().textTheme,
+        ).copyWith(
+          titleLarge: GoogleFonts.roboto(
+            textStyle: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: kColorScheme.primaryContainer,
+              fontSize: 25,
+            ),
+          ),
+          bodyMedium: GoogleFonts.roboto(
+            textStyle: TextStyle(
+              fontWeight: FontWeight.normal,
+              color: kColorScheme.onPrimaryContainer,
+              fontSize: 16,
+            ),
+          ),
+        ),
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+          backgroundColor: kDarkColorScheme.primaryContainer,
+          foregroundColor: kDarkColorScheme.onPrimaryContainer,
+        ),
+        iconTheme: IconThemeData(
+          color: kDarkColorScheme.onPrimaryContainer,
+        ),
+      ),
+      themeMode: ThemeMode.light,
+      home: const HomeScreen(),
     ),
   );
 }

@@ -1,4 +1,3 @@
-import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:my_expense_tracker_app/model/expense.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,7 +6,12 @@ import 'package:uuid/uuid.dart';
 const uuid = Uuid();
 
 class AddExpense extends StatefulWidget {
-  const AddExpense({super.key});
+  const AddExpense({
+    super.key,
+    required this.category,
+  });
+
+  final Map<String, dynamic> category;
 
   @override
   State<AddExpense> createState() => _AddExpenseState();
@@ -16,87 +20,78 @@ class AddExpense extends StatefulWidget {
 class _AddExpenseState extends State<AddExpense> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
-  String? _selectedCategory;
+
   DateTime? _selectedDate;
-
-  // final List<String> _categories = [
-  //   "Food",
-  //   "Rent",
-  //   "Transportation",
-  //   "Entertainment",
-  //   "Education",
-  //   "Monthly Shopping",
-  //   "Medecine",
-  //   "other"
-  // ];
-
-  final List<Map<String, dynamic>> _categories = [
-    {'name': 'Food', 'color': const Color.fromARGB(255, 19, 212, 8)},
-    {'name': 'Rent', 'color': const Color.fromARGB(255, 232, 9, 9)},
-    {'name': 'Transportation', 'color': Colors.blue},
-    {'name': 'Entertainment', 'color': const Color.fromARGB(255, 6, 125, 10)},
-    {'name': 'Education', 'color': const Color.fromARGB(255, 231, 149, 9)},
-    {'name': 'Monthly Shopping', 'color': Colors.yellow},
-    {'name': 'Medicine', 'color': const Color.fromARGB(255, 90, 5, 114)},
-    {'name': 'Other', 'color': const Color.fromARGB(255, 243, 33, 184)},
-  ];
-
-  //String _selectedCategory = 'Food';
 
   @override
   void dispose() {
     _titleController.dispose();
     _amountController.dispose();
-    _selectedCategory = null;
+    _selectedDate = null; // Dispose of the date field controller
     super.dispose();
   }
 
   void _clearForm() {
-    _titleController.clear();
-    _amountController.clear();
     setState(() {
-      _selectedCategory = null;
+      _titleController.clear();
+      _amountController.clear();
+      _selectedDate = null;
     });
   }
 
   void _addExpense() async {
     if (_titleController.text.isNotEmpty &&
         _amountController.text.isNotEmpty &&
-        _selectedCategory != null &&
-        _selectedCategory != null) {
-      double amount = double.parse(_amountController.text);
-      String? category = _selectedCategory;
-      DateTime? date = _selectedDate;
+        _selectedDate != null) {
+      try {
+        double amount = double.parse(_amountController.text);
+        String? category = widget.category['name'];
+        DateTime? date = _selectedDate;
 
-      Expense expense = Expense(
-        id: Uuid().v4(),
-        title: _titleController.text,
-        amount: amount,
-        category: category,
-        date: date,
+        Expense expense = Expense(
+          id: Uuid().v4(),
+          title: _titleController.text,
+          amount: amount,
+          category: category,
+          date: date,
+        );
+
+        await FirebaseFirestore.instance
+            .collection('expenses')
+            .doc(expense.id)
+            .set(expense.toMap());
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Expense added successfully!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+
+        _clearForm();
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to add expense. Please try again.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please fill all fields.'),
+          backgroundColor: Color.fromARGB(255, 215, 243, 7),
+        ),
       );
-
-      await FirebaseFirestore.instance
-          .collection('expenses')
-          .doc(expense.id)
-          .set(expense.toMap());
     }
-    _clearForm();
-    Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Add New Expense',
-          style: TextStyle(
-            fontSize: 25,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
+        title: Text('Add Expense - ${widget.category['name']}'),
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
       body: Padding(
@@ -107,7 +102,7 @@ class _AddExpenseState extends State<AddExpense> {
               controller: _titleController,
               decoration: InputDecoration(
                 labelText: "Expense Title",
-                labelStyle: Theme.of(context).textTheme.titleLarge,
+                labelStyle: Theme.of(context).textTheme.bodyMedium,
               ),
             ),
             SizedBox(
@@ -117,58 +112,51 @@ class _AddExpenseState extends State<AddExpense> {
               controller: _amountController,
               decoration: InputDecoration(
                 labelText: "Amount",
-                labelStyle: Theme.of(context).textTheme.titleLarge,
+                labelStyle: Theme.of(context).textTheme.bodyMedium,
               ),
               keyboardType: TextInputType.number,
             ),
             SizedBox(
               height: 10,
             ),
-            DropdownButtonFormField<String>(
-              value: _selectedCategory,
+            TextFormField(
+              readOnly: true, // Prevent manual input
               decoration: InputDecoration(
-                  labelText: 'Category',
-                  labelStyle: Theme.of(context).textTheme.titleLarge),
-              items: _categories.map((category) {
-                return DropdownMenuItem<String>(
-                  value: category['name'],
-                  child: Row(
-                    children: [
-                      CircleAvatar(
-                        backgroundColor: category['color'],
-                        radius: 10,
-                      ),
-                      SizedBox(width: 10),
-                      Text(category['name']),
-                    ],
-                  ),
-                );
-              }).toList(),
-              onChanged: (newValue) {
-                setState(() {
-                  _selectedCategory = newValue;
-                });
-              },
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            DateTimeFormField(
-              decoration: InputDecoration(
-                labelText: 'Enter Date',
-                labelStyle: Theme.of(context).textTheme.titleLarge,
+                labelText: 'Select Date',
+                labelStyle: Theme.of(context).textTheme.bodyMedium,
+                suffixIcon:
+                    const Icon(Icons.calendar_today), // Add a calendar icon
               ),
-              firstDate: DateTime(2020),
-              lastDate: DateTime(2100),
-              initialPickerDateTime: DateTime.now(),
-              onChanged: (DateTime? value) {
-                _selectedDate = value;
+              onTap: () async {
+                DateTime? pickedDate = await showDatePicker(
+                  context: context,
+                  initialDate: DateTime.now(),
+                  firstDate:
+                      DateTime(2020), // Earliest date the user can select
+                  lastDate: DateTime(2100), // Latest date the user can select
+                );
+
+                if (pickedDate != null) {
+                  setState(() {
+                    // Strip the time component and store only the date
+                    _selectedDate = DateTime(
+                        pickedDate.year, pickedDate.month, pickedDate.day);
+                  });
+                }
               },
+              controller: TextEditingController(
+                text: _selectedDate != null
+                    ? '${_selectedDate!.year}-${_selectedDate!.month.toString().padLeft(2, '0')}-${_selectedDate!.day.toString().padLeft(2, '0')}'
+                    : '',
+              ), // Display the selected date in the text field
             ),
             SizedBox(
               height: 10,
             ),
-            ElevatedButton(onPressed: _addExpense, child: Text("Add Expense"))
+            ElevatedButton(
+              onPressed: _addExpense,
+              child: Text("Add Expense"),
+            )
           ],
         ),
       ),
