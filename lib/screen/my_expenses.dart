@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:my_expense_tracker_app/screen/add_expense.dart';
+
 import 'package:my_expense_tracker_app/model/expense.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:my_expense_tracker_app/screen/chart.dart';
+
 import 'edit_expense_screen.dart';
 
 class MyExpenses extends StatefulWidget {
@@ -29,49 +29,115 @@ class _MyExpensesState extends State<MyExpenses> {
         .snapshots();
   }
 
-  Color getColorForCategory(String category) {
+  Map<String, dynamic> getCategoryDetails(String category) {
     switch (category) {
       case 'Food':
-        return const Color.fromARGB(255, 19, 212, 8);
+        return {
+          'color': const Color.fromARGB(255, 19, 212, 8),
+          'icon': const Icon(Icons.fastfood, color: Colors.white),
+        };
       case 'Rent':
-        return const Color.fromARGB(255, 232, 9, 9);
+        return {
+          'color': const Color.fromARGB(255, 232, 9, 9),
+          'icon': const Icon(Icons.home, color: Colors.white),
+        };
       case 'Transportation':
-        return Colors.blue;
+        return {
+          'color': Colors.blue,
+          'icon': const Icon(Icons.directions_car, color: Colors.white),
+        };
       case 'Entertainment':
-        return const Color.fromARGB(255, 6, 125, 10);
+        return {
+          'color': const Color.fromARGB(255, 6, 125, 10),
+          'icon': const Icon(Icons.movie, color: Colors.white),
+        };
       case 'Education':
-        return const Color.fromARGB(255, 231, 149, 9);
+        return {
+          'color': const Color.fromARGB(255, 231, 149, 9),
+          'icon': const Icon(Icons.school, color: Colors.white),
+        };
       case 'Monthly Shopping':
-        return Colors.yellow;
-      case 'medicine':
-        return const Color.fromARGB(255, 90, 5, 114);
-      case 'Other':
-        return const Color.fromARGB(255, 243, 33, 184);
-      default:
-        return Colors.grey;
-    }
-  }
-
-  Icon getIconForCategory(String category) {
-    switch (category) {
-      case 'Food':
-        return Icon(Icons.fastfood, color: Colors.white);
-      case 'Rent':
-        return Icon(Icons.house, color: Colors.white);
-      case 'Transportation':
-        return Icon(Icons.directions_car, color: Colors.white);
-      case 'Entertainment':
-        return Icon(Icons.movie, color: Colors.white);
-      case 'Education':
-        return Icon(Icons.book, color: Colors.white);
-      case 'Monthly Shopping':
-        return Icon(Icons.shop, color: Colors.white);
+        return {
+          'color': Colors.yellow,
+          'icon': const Icon(Icons.shopping_cart, color: Colors.white),
+        };
       case 'Medicine':
-        return Icon(Icons.medical_information, color: Colors.white);
-      case 'other':
-        return Icon(Icons.food_bank_sharp, color: Colors.white);
+        return {
+          'color': const Color.fromARGB(255, 90, 5, 114),
+          'icon': const Icon(Icons.medical_services, color: Colors.white),
+        };
+      case 'Utilities':
+        return {
+          'color': Colors.orange,
+          'icon': const Icon(Icons.lightbulb, color: Colors.white),
+        };
+      case 'Groceries':
+        return {
+          'color': Colors.green,
+          'icon': const Icon(Icons.local_grocery_store, color: Colors.white),
+        };
+      case 'Health and Fitness':
+        return {
+          'color': Colors.teal,
+          'icon': const Icon(Icons.fitness_center, color: Colors.white),
+        };
+      case 'Personal Care':
+        return {
+          'color': Colors.pink,
+          'icon': const Icon(Icons.spa, color: Colors.white),
+        };
+      case 'Servings and Investments':
+        return {
+          'color': Colors.cyan,
+          'icon': const Icon(Icons.savings, color: Colors.white),
+        };
+      case 'Debt Payments':
+        return {
+          'color': Colors.brown,
+          'icon': const Icon(Icons.credit_card, color: Colors.white),
+        };
+      case 'Subscriptions':
+        return {
+          'color': Colors.lime,
+          'icon': const Icon(Icons.subscriptions, color: Colors.white),
+        };
+      case 'Gifts and Donations':
+        return {
+          'color': const Color.fromARGB(141, 30, 155, 174),
+          'icon': const Icon(Icons.card_giftcard, color: Colors.white),
+        };
+      case 'Travel':
+        return {
+          'color': const Color.fromARGB(255, 243, 33, 184),
+          'icon': const Icon(Icons.airplanemode_active, color: Colors.white),
+        };
+      case 'Charity':
+        return {
+          'color': const Color.fromARGB(255, 243, 33, 184),
+          'icon': const Icon(Icons.volunteer_activism, color: Colors.white),
+        };
+      case 'Pets':
+        return {
+          'color': Colors.brown,
+          'icon': const Icon(Icons.pets, color: Colors.white),
+        };
+      case 'Home Improvement':
+        return {
+          'color': Colors.blueGrey,
+          'icon': const Icon(Icons.build, color: Colors.white),
+        };
+
+      case 'Miscellaneous':
+        return {
+          'color': Colors.grey,
+          'icon': const Icon(Icons.category, color: Colors.white),
+        };
+
       default:
-        return Icon(Icons.category, color: Colors.white);
+        return {
+          'color': const Color.fromARGB(117, 158, 158, 158),
+          'icon': const Icon(Icons.category, color: Colors.white),
+        };
     }
   }
 
@@ -143,10 +209,10 @@ class _MyExpensesState extends State<MyExpenses> {
                               contentPadding: EdgeInsets.symmetric(
                                   vertical: 5, horizontal: 10),
                               leading: CircleAvatar(
-                                backgroundColor: getColorForCategory(
-                                    expense[index]['category']),
-                                child: getIconForCategory(
-                                    expense[index]['category']),
+                                backgroundColor: getCategoryDetails(
+                                    expense[index]['category'])['color'],
+                                child: getCategoryDetails(
+                                    expense[index]['category'])['icon'],
                               ),
                               title: Text(
                                 expense[index]['title'],

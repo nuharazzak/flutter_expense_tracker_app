@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:my_expense_tracker_app/model/expense.dart';
+import 'package:my_expense_tracker_app/model/income.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class EditExpenseScreen extends StatefulWidget {
-  final Expense expense;
-  const EditExpenseScreen({super.key, required this.expense});
+class EditIncomeScreen extends StatefulWidget {
+  final Income income;
+  const EditIncomeScreen({super.key, required this.income});
 
   @override
-  State<EditExpenseScreen> createState() => _EditExpenseScreenState();
+  State<EditIncomeScreen> createState() => _EditIncomeScreenState();
 }
 
-class _EditExpenseScreenState extends State<EditExpenseScreen> {
+class _EditIncomeScreenState extends State<EditIncomeScreen> {
   final _formKey = GlobalKey<FormState>();
   late String _title;
   late double _amount;
@@ -20,21 +20,21 @@ class _EditExpenseScreenState extends State<EditExpenseScreen> {
 
   @override
   void initState() {
-    _title = widget.expense.title;
-    _amount = widget.expense.amount;
-    _category = widget.expense.category;
-    _date = widget.expense.date;
-    _selectedDate = widget.expense.date;
+    _title = widget.income.title;
+    _amount = widget.income.amount;
+    _category = widget.income.category;
+    _date = widget.income.date;
+    _selectedDate = widget.income.date;
 
     super.initState();
   }
 
-  Future<void> _saveExpense() async {
+  Future<void> _saveIncome() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
-      final updatedExpense = Expense(
-        id: widget.expense.id,
+      final updatedExpense = Income(
+        id: widget.income.id,
         title: _title,
         amount: _amount,
         category: _category,
@@ -44,13 +44,13 @@ class _EditExpenseScreenState extends State<EditExpenseScreen> {
       try {
         // Update the expense in Firestore
         await FirebaseFirestore.instance
-            .collection('expenses')
+            .collection('incomes')
             .doc(updatedExpense.id)
             .update(updatedExpense.toMap());
 
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Expense Updated Successfully!'),
+            content: Text('Income Updated Successfully!'),
             backgroundColor: Colors.green,
           ),
         );
@@ -59,7 +59,7 @@ class _EditExpenseScreenState extends State<EditExpenseScreen> {
       } catch (error) {
         // Handle errors (e.g., show a snackbar)
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to update expense: $error')),
+          SnackBar(content: Text('Failed to update income: $error')),
         );
       }
     }
@@ -69,12 +69,12 @@ class _EditExpenseScreenState extends State<EditExpenseScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Expense'),
+        title: const Text('Edit Income'),
         backgroundColor: Theme.of(context).colorScheme.primary,
         // actions: [
         //   IconButton(
         //     icon: const Icon(Icons.save),
-        //     onPressed: _saveExpense,
+        //     onPressed: _saveIncome,
         //   ),
         // ],
       ),
@@ -130,25 +130,9 @@ class _EditExpenseScreenState extends State<EditExpenseScreen> {
                 ),
 
                 items: [
-                  'Food',
-                  'Rent',
-                  'Transportation',
-                  'Entertainment',
-                  'Education',
-                  'Insurance',
-                  'Monthly Shopping',
-                  'Medecine',
-                  'Utilities',
-                  'Groceries',
-                  'Health and Fitness',
-                  'Personal Care',
-                  'Servings and Investments',
-                  'Debt Payments',
-                  'Subscription',
-                  'Gifts and Donations',
-                  'Travel',
-                  'Charity',
-                  'Pets',
+                  'Salary',
+                  'Business',
+                  'Investments',
                   'Other',
                 ].map((category) {
                   return DropdownMenuItem<String>(
@@ -206,7 +190,7 @@ class _EditExpenseScreenState extends State<EditExpenseScreen> {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: _saveExpense,
+                onPressed: _saveIncome,
                 child: const Text("Save Changes"),
               ),
             ],

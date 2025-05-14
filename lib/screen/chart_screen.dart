@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:my_expense_tracker_app/screen/chart.dart';
+
+import 'package:my_expense_tracker_app/screen/chart_expense.dart';
+import 'package:my_expense_tracker_app/screen/chart_income.dart';
 
 class ChartScreen extends StatelessWidget {
   const ChartScreen({super.key});
@@ -15,19 +17,68 @@ class ChartScreen extends StatelessWidget {
         ),
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
-      body: Container(
-        margin: const EdgeInsets.all(10.0),
-        width: double.infinity,
-        height: 200,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: const Color.fromARGB(255, 143, 123, 145),
-          // image: DecorationImage(
-          //   image: NetworkImage(
-          //       "https://user-images.githubusercontent.com/54882818/130562917-33168e1a-beba-410a-a986-0fff4f117a6b.png"),
-          // ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Income Chart Section
+            Container(
+              margin: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(10.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: const Color.fromARGB(255, 143, 123, 145),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Income Chart",
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 25,
+                        ),
+                  ),
+                  const SizedBox(height: 10),
+                  const SizedBox(
+                    height: 200,
+                    child:
+                        ChartIncome(), // Replace with your income chart widget
+                  ),
+                ],
+              ),
+            ),
+            // Expenses Chart Section
+            Container(
+              margin: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(10.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: const Color.fromARGB(255, 143, 123, 145),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Expenses Chart",
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 25,
+                        ),
+                  ),
+                  const SizedBox(height: 10),
+                  const SizedBox(
+                    height: 200,
+                    child:
+                        ChartExpense(), // Replace with your expenses chart widget
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
-        child: const Chart(),
       ),
     );
   }

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:my_expense_tracker_app/screen/add_expense.dart';
-import 'package:my_expense_tracker_app/screen/add_income.dart';
+
 import 'package:my_expense_tracker_app/screen/chart_screen.dart';
 import 'package:my_expense_tracker_app/screen/my_expenses.dart';
 import 'package:my_expense_tracker_app/screen/select_category_screen.dart';
 import 'package:my_expense_tracker_app/screen/select_income_screen.dart';
 
 import 'package:my_expense_tracker_app/screen/summary_screen.dart';
+import 'package:my_expense_tracker_app/screen/user_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -22,12 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
     const SummaryScreen(),
     const MyExpenses(),
     const ChartScreen(),
-    const Center(
-      child: Text(
-        'Welcome to the User Page',
-        style: TextStyle(fontSize: 20),
-      ),
-    ),
+    const UserScreen()
   ];
 
   void _onItemTapped(int index) {

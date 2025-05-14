@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:my_expense_tracker_app/screen/add_income.dart';
+import 'package:my_expense_tracker_app/screen/view_income_screen.dart';
 
 class SelectIncomeScreen extends StatelessWidget {
   SelectIncomeScreen({super.key});
@@ -8,19 +9,23 @@ class SelectIncomeScreen extends StatelessWidget {
   final List<Map<String, dynamic>> incomes = [
     {
       'name': 'Salary',
-      'icon': Icons.fastfood,
+      'icon': Icons.attach_money,
       'color': const Color.fromARGB(255, 19, 212, 8)
     },
     {
       'name': 'Business',
-      'icon': Icons.home,
-      'color': const Color.fromARGB(255, 232, 9, 9)
+      'icon': Icons.business,
+      'color': const Color.fromARGB(255, 232, 9, 9),
     },
-    {'name': 'Investments', 'icon': Icons.directions_car, 'color': Colors.blue},
+    {
+      'name': 'Investments',
+      'icon': Icons.trending_up,
+      'color': Colors.blue,
+    },
     {
       'name': 'Other',
-      'icon': Icons.movie,
-      'color': const Color.fromARGB(255, 6, 125, 10)
+      'icon': Icons.abc,
+      'color': const Color.fromARGB(255, 125, 6, 95),
     },
   ];
 
@@ -89,6 +94,17 @@ class SelectIncomeScreen extends StatelessWidget {
             );
           },
         ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const ViewIncomeScreen(),
+              ));
+        },
+        label: Text('View All Incomes'),
+        icon: Icon(Icons.list),
       ),
     );
   }
