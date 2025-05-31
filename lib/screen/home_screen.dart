@@ -4,9 +4,9 @@ import 'package:my_expense_tracker_app/screen/chart_screen.dart';
 import 'package:my_expense_tracker_app/screen/my_expenses.dart';
 import 'package:my_expense_tracker_app/screen/select_category_screen.dart';
 import 'package:my_expense_tracker_app/screen/select_income_screen.dart';
+import 'package:my_expense_tracker_app/screen/settings.dart';
 
 import 'package:my_expense_tracker_app/screen/summary_screen.dart';
-import 'package:my_expense_tracker_app/screen/user_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,19 +15,42 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   int _selectedIndex = 0;
+  late AnimationController _fabController;
+  late Animation<double> _fabAnimation;
 
-  final List<Widget> _pages = <Widget>[
-    const SummaryScreen(),
-    const MyExpenses(),
-    const ChartScreen(),
-    const UserScreen()
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _fabController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _fabAnimation = CurvedAnimation(
+      parent: _fabController,
+      curve: Curves.elasticOut,
+    );
+    _fabController.forward();
+  }
+
+  @override
+  void dispose() {
+    _fabController.dispose();
+    super.dispose();
+  }
+
+  DateTime _selectedMonth = DateTime.now();
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+    });
+  }
+
+  void _updateSelectedMonth(DateTime newMonth) {
+    setState(() {
+      _selectedMonth = newMonth;
     });
   }
 
@@ -59,7 +82,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               Navigator.pop(context);
                               Navigator.push(context, MaterialPageRoute(
                                 builder: (context) {
-                                  return SelectIncomeScreen();
+                                  return SelectIncomeScreen(
+                                      selectedMonth: _selectedMonth);
                                 },
                               ));
                             },
@@ -109,17 +133,33 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final List<Widget> _pages = <Widget>[
+      SummaryScreen(
+        selectedMonth: _selectedMonth,
+        onMonthChanged: _updateSelectedMonth,
+      ),
+      MyExpenses(
+        selectedMonth: _selectedMonth,
+      ),
+      ChartScreen(
+        selectedMonth: _selectedMonth,
+      ),
+      SettingsScreen()
+    ];
     return Scaffold(
       body: SafeArea(child: _pages[_selectedIndex]),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Navigator.push(context, MaterialPageRoute(
-          //   builder: (context) {
-          //     return AddExpense();
-          //   },
-          _showPopup(context);
-        },
-        child: const Icon(Icons.add),
+      floatingActionButton: ScaleTransition(
+        scale: _fabAnimation,
+        child: FloatingActionButton(
+          onPressed: () {
+            // Navigator.push(context, MaterialPageRoute(
+            //   builder: (context) {
+            //     return AddExpense();
+            //   },
+            _showPopup(context);
+          },
+          child: const Icon(Icons.add),
+        ),
       ),
       floatingActionButtonLocation:
           FloatingActionButtonLocation.centerDocked, // Place FAB in the center
@@ -140,8 +180,8 @@ class _HomeScreenState extends State<HomeScreen> {
             label: 'Chart',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'User',
+            icon: Icon(Icons.settings),
+            label: 'Settings',
           ),
         ],
         currentIndex: _selectedIndex,

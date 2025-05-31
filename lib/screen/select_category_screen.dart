@@ -1,8 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:my_expense_tracker_app/screen/add_expense.dart';
+import 'dart:async';
 
-class SelectCategoryScreen extends StatelessWidget {
+class SelectCategoryScreen extends StatefulWidget {
   SelectCategoryScreen({super.key});
+
+  @override
+  State<SelectCategoryScreen> createState() => _SelectCategoryScreenState();
+}
+
+class _SelectCategoryScreenState extends State<SelectCategoryScreen>
+    with TickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 700),
+    )..forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   final List<Map<String, dynamic>> categories = [
     {
@@ -100,45 +124,70 @@ class SelectCategoryScreen extends StatelessWidget {
           itemCount: categories.length,
           itemBuilder: (context, index) {
             final category = categories[index];
-            return GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AddExpense(category: category),
+            return AnimatedBuilder(
+              animation: _controller,
+              builder: (context, child) {
+                final start = index * 0.05;
+                final end = start + 0.5;
+                final animationValue = CurvedAnimation(
+                  parent: _controller,
+                  curve: Interval(
+                    start.clamp(0.0, 1.0),
+                    end.clamp(0.0, 1.0),
+                    curve: Curves.easeOut,
+                  ),
+                ).value;
+                return Opacity(
+                  opacity: animationValue,
+                  child: Transform.scale(
+                    scale: 0.8 + 0.2 * animationValue,
+                    child: child,
                   ),
                 );
               },
-              child: Container(
-                decoration: BoxDecoration(
-                  color: category['color']
-                      .withOpacity(0.2), // Light background color
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: category['color'], // Border color
-                    width: 2,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AddExpense(category: category),
+                    ),
+                  );
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: category['color']
+                        .withOpacity(0.2), // Light background color
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: category['color'], // Border color
+                      width: 2,
+                    ),
                   ),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      category['icon'],
-                      color: category['color'],
-                      size: 40,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      category['name'],
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Hero(
+                        tag: category['name'],
+                        child: Icon(
+                          category['icon'],
+                          color: category['color'],
+                          size: 40,
+                        ),
                       ),
-                      overflow:
-                          TextOverflow.ellipsis, // Truncate text with ellipsis
-                      maxLines: 1,
-                    ),
-                  ],
+                      const SizedBox(height: 8),
+                      Text(
+                        category['name'],
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        overflow: TextOverflow
+                            .ellipsis, // Truncate text with ellipsis
+                        maxLines: 1,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );

@@ -4,7 +4,9 @@ import 'package:my_expense_tracker_app/screen/chart_expense.dart';
 import 'package:my_expense_tracker_app/screen/chart_income.dart';
 
 class ChartScreen extends StatelessWidget {
-  const ChartScreen({super.key});
+  const ChartScreen({super.key, required this.selectedMonth});
+
+  final DateTime selectedMonth;
 
   @override
   Widget build(BuildContext context) {
@@ -41,10 +43,11 @@ class ChartScreen extends StatelessWidget {
                         ),
                   ),
                   const SizedBox(height: 10),
-                  const SizedBox(
+                  SizedBox(
                     height: 200,
-                    child:
-                        ChartIncome(), // Replace with your income chart widget
+                    child: ChartIncome(
+                      selectedMonth: selectedMonth,
+                    ), // Replace with your income chart widget
                   ),
                 ],
               ),
@@ -69,10 +72,11 @@ class ChartScreen extends StatelessWidget {
                         ),
                   ),
                   const SizedBox(height: 10),
-                  const SizedBox(
+                  SizedBox(
                     height: 200,
-                    child:
-                        ChartExpense(), // Replace with your expenses chart widget
+                    child: ChartExpense(
+                      selectedMonth: selectedMonth,
+                    ), // Replace with your expenses chart widget
                   ),
                 ],
               ),

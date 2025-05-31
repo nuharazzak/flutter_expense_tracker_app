@@ -4,7 +4,9 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class ChartExpense extends StatefulWidget {
-  const ChartExpense({super.key});
+  const ChartExpense({super.key, required this.selectedMonth});
+
+  final DateTime selectedMonth;
 
   @override
   State<ChartExpense> createState() => _ChartExpenseState();
@@ -20,9 +22,16 @@ class _ChartExpenseState extends State<ChartExpense> {
   }
 
   Future<void> fetchData() async {
+    final start =
+        DateTime(widget.selectedMonth.year, widget.selectedMonth.month, 1);
+    final end =
+        DateTime(widget.selectedMonth.year, widget.selectedMonth.month + 1, 1);
     QuerySnapshot snapshot = await FirebaseFirestore.instance
         .collection('expenses')
-        .orderBy('date', descending: true)
+        .where('date', isGreaterThanOrEqualTo: start)
+        .where('date', isLessThan: end)
+        // .collection('expenses')
+        // .orderBy('date', descending: true)
         .get();
 
     Map<String, double> data = {};
@@ -162,7 +171,9 @@ class _ChartExpenseState extends State<ChartExpense> {
     return Padding(
       padding: EdgeInsets.all(4),
       child: categoryData.isEmpty
-          ? Center(child: CircularProgressIndicator())
+          ? Center(
+              child: Text("No data available...."),
+            )
           : Column(
               children: [
                 Expanded(

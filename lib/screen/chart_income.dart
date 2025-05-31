@@ -3,7 +3,8 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ChartIncome extends StatefulWidget {
-  const ChartIncome({super.key});
+  const ChartIncome({super.key, required this.selectedMonth});
+  final DateTime selectedMonth;
 
   @override
   State<ChartIncome> createState() => _ChartIncomeState();
@@ -19,9 +20,16 @@ class _ChartIncomeState extends State<ChartIncome> {
   }
 
   Future<void> fetchData() async {
+    final start =
+        DateTime(widget.selectedMonth.year, widget.selectedMonth.month, 1);
+    final end =
+        DateTime(widget.selectedMonth.year, widget.selectedMonth.month + 1, 1);
     QuerySnapshot snapshot = await FirebaseFirestore.instance
         .collection('incomes')
-        .orderBy('date', descending: true)
+        .where('date', isGreaterThanOrEqualTo: start)
+        .where('date', isLessThan: end)
+        // .collection('incomes')
+        // .orderBy('date', descending: true)
         .get();
 
     Map<String, double> data = {};
@@ -65,7 +73,9 @@ class _ChartIncomeState extends State<ChartIncome> {
     return Padding(
       padding: EdgeInsets.all(4),
       child: categoryData.isEmpty
-          ? Center(child: CircularProgressIndicator())
+          ? Center(
+              child: Text("No data available...."),
+            )
           : Column(
               children: [
                 Expanded(

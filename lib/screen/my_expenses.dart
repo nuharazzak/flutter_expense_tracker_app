@@ -1,30 +1,33 @@
 import 'package:flutter/material.dart';
-
 import 'package:my_expense_tracker_app/model/expense.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'edit_expense_screen.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:my_expense_tracker_app/provider/currency_provider.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
-class MyExpenses extends StatefulWidget {
-  const MyExpenses({super.key});
+class MyExpenses extends ConsumerStatefulWidget {
+  const MyExpenses({super.key, required this.selectedMonth});
+
+  final DateTime selectedMonth;
 
   @override
-  State<MyExpenses> createState() => _MyExpensesState();
+  ConsumerState<MyExpenses> createState() => _MyExpensesState();
 }
 
-class _MyExpensesState extends State<MyExpenses> {
-  // Stream<List<Expense>> getExpenses() {
-  //   return FirebaseFirestore.instance
-  //       .collection('expenses')
-  //       .snapshots()
-  //       .map((snapshot) {
-  //     return snapshot.docs.map((doc) => Expense.fromDocument(doc)).toList();
-  //   });
-  // }
-
+class _MyExpensesState extends ConsumerState<MyExpenses> {
   Stream<QuerySnapshot> _getExpenses() {
+    final start =
+        DateTime(widget.selectedMonth.year, widget.selectedMonth.month, 1);
+    final end =
+        DateTime(widget.selectedMonth.year, widget.selectedMonth.month + 1, 1);
     return FirebaseFirestore.instance
+        // .collection('expenses')
+        // .orderBy('date', descending: true)
+        // .snapshots();
         .collection('expenses')
+        .where('date', isGreaterThanOrEqualTo: start)
+        .where('date', isLessThan: end)
         .orderBy('date', descending: true)
         .snapshots();
   }
@@ -143,6 +146,8 @@ class _MyExpensesState extends State<MyExpenses> {
 
   @override
   Widget build(BuildContext context) {
+    final currency = ref.watch(currencyProvider);
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.onSecondary,
       appBar: AppBar(
@@ -167,90 +172,107 @@ class _MyExpensesState extends State<MyExpenses> {
               } else {
                 final expense = snapshot.data!.docs;
                 return Expanded(
-                  child: ListView.builder(
-                    itemCount: expense.length,
-                    itemBuilder: (context, index) {
-                      return Dismissible(
-                        key: Key(expense[index].id),
-                        direction: DismissDirection.endToStart,
-                        onDismissed: (direction) async {
-                          await FirebaseFirestore.instance
-                              .collection('expenses')
-                              .doc(expense[index].id)
-                              .delete();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Expense deleted')),
-                          );
-                        },
-                        child: Card(
-                          //shadowColor: Colors.blueGrey,
-                          // color: const Color.fromARGB(255, 239, 134, 213),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              gradient: LinearGradient(
-                                colors: [
-                                  const Color.fromARGB(255, 141, 3, 132),
-                                  const Color.fromARGB(255, 235, 35, 145),
-                                ],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withValues(),
-                                  offset: Offset(0, 2),
-                                  blurRadius: 5.0,
-                                  spreadRadius: -1.0,
-                                ),
-                              ],
-                            ),
-                            child: ListTile(
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: 5, horizontal: 10),
-                              leading: CircleAvatar(
-                                backgroundColor: getCategoryDetails(
-                                    expense[index]['category'])['color'],
-                                child: getCategoryDetails(
-                                    expense[index]['category'])['icon'],
-                              ),
-                              title: Text(
-                                expense[index]['title'],
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              trailing: Text(
-                                '\$${expense[index]['amount'].toString()}',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.normal,
-                                ),
-                              ),
-                              onTap: () {
-                                // Navigate to EditExpenseScreen
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => EditExpenseScreen(
-                                      expense: Expense(
-                                        id: expense[index].id,
-                                        title: expense[index]['title'],
-                                        amount: expense[index]['amount'],
-                                        category: expense[index]['category'],
-                                        date: (expense[index]['date']
-                                                as Timestamp)
-                                            .toDate(),
+                  child: AnimationLimiter(
+                    child: ListView.builder(
+                      itemCount: expense.length,
+                      itemBuilder: (context, index) {
+                        return AnimationConfiguration.staggeredList(
+                          position: index,
+                          duration: const Duration(milliseconds: 400),
+                          child: SlideAnimation(
+                            verticalOffset: 50.0,
+                            child: FadeInAnimation(
+                              child: Dismissible(
+                                key: Key(expense[index].id),
+                                direction: DismissDirection.endToStart,
+                                onDismissed: (direction) async {
+                                  await FirebaseFirestore.instance
+                                      .collection('expenses')
+                                      .doc(expense[index].id)
+                                      .delete();
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text('Expense deleted')),
+                                  );
+                                },
+                                child: Card(
+                                  //shadowColor: Colors.blueGrey,
+                                  // color: const Color.fromARGB(255, 239, 134, 213),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          const Color.fromARGB(
+                                              255, 141, 3, 132),
+                                          const Color.fromARGB(
+                                              255, 235, 35, 145),
+                                        ],
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
                                       ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withValues(),
+                                          offset: Offset(0, 2),
+                                          blurRadius: 5.0,
+                                          spreadRadius: -1.0,
+                                        ),
+                                      ],
+                                    ),
+                                    child: ListTile(
+                                      contentPadding: EdgeInsets.symmetric(
+                                          vertical: 5, horizontal: 10),
+                                      leading: CircleAvatar(
+                                        backgroundColor: getCategoryDetails(
+                                            expense[index]
+                                                ['category'])['color'],
+                                        child: getCategoryDetails(
+                                            expense[index]['category'])['icon'],
+                                      ),
+                                      title: Text(
+                                        expense[index]['title'],
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      trailing: Text(
+                                        '$currency ${expense[index]['amount'].toString()}',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        // Navigate to EditExpenseScreen
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                EditExpenseScreen(
+                                              expense: Expense(
+                                                id: expense[index].id,
+                                                title: expense[index]['title'],
+                                                amount: expense[index]
+                                                    ['amount'],
+                                                category: expense[index]
+                                                    ['category'],
+                                                date: (expense[index]['date']
+                                                        as Timestamp)
+                                                    .toDate(),
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
                                     ),
                                   ),
-                                );
-                              },
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   ),
                 );
               }
