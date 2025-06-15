@@ -15,7 +15,7 @@ class PrivacyScreen extends StatelessWidget {
           child: Text(
             '''
 1. Introduction
-Welcome to My Wallet! Your privacy is important to us, and this policy explains how we collect, use, and protect your personal information while using our expense tracker app.
+Welcome to My Smart Wallet! Your privacy is important to us, and this policy explains how we collect, use, and protect your personal information while using our expense tracker app.
 
 2. Information We Collect
 We collect the following types of information:
@@ -46,8 +46,7 @@ You have the right to:
 6. Changes to This Privacy Policy
 We may update this policy periodically. Any changes will be communicated through the app or our website.
 
-7. Contact Us
-If you have any questions, reach us at support@example.com.
+
 ''',
             style: const TextStyle(
               color: Colors.black, // Black text
