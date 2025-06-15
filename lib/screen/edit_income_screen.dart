@@ -71,12 +71,6 @@ class _EditIncomeScreenState extends State<EditIncomeScreen> {
       appBar: AppBar(
         title: const Text('Edit Income'),
         backgroundColor: Theme.of(context).colorScheme.primary,
-        // actions: [
-        //   IconButton(
-        //     icon: const Icon(Icons.save),
-        //     onPressed: _saveIncome,
-        //   ),
-        // ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
