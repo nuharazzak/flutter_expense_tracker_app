@@ -58,6 +58,8 @@ class _SelectIncomeScreenState extends State<SelectIncomeScreen>
 
   @override
   Widget build(BuildContext context) {
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Select Income'),
@@ -66,11 +68,12 @@ class _SelectIncomeScreenState extends State<SelectIncomeScreen>
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2, // Number of items per row
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: isLandscape ? 4 : 2, // Number of items per row
             crossAxisSpacing: 8.0, // Horizontal spacing between items
             mainAxisSpacing: 8.0, // Vertical spacing between items
-            childAspectRatio: 2, // Width-to-height ratio of each item
+            childAspectRatio:
+                isLandscape ? 1.5 : 2, // Width-to-height ratio of each item
           ),
           itemCount: incomes.length,
           itemBuilder: (context, index) {

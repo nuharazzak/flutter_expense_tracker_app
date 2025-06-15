@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_expense_tracker_app/provider/currency_provider.dart';
+import 'package:intl/intl.dart';
 
 class SummaryScreen extends ConsumerStatefulWidget {
   const SummaryScreen({
@@ -13,6 +14,7 @@ class SummaryScreen extends ConsumerStatefulWidget {
 
   final DateTime selectedMonth;
   final ValueChanged<DateTime> onMonthChanged;
+  // Removed formattedMonth from here; use DateFormat.yMMMM().format(widget.selectedMonth) in the State class instead.
 
   @override
   ConsumerState<SummaryScreen> createState() => _SummaryScreenState();
@@ -81,19 +83,46 @@ class _SummaryScreenState extends ConsumerState<SummaryScreen> {
   @override
   Widget build(BuildContext context) {
     final currency = ref.watch(currencyProvider);
+    final formattedMonth = DateFormat.yMMMM().format(widget.selectedMonth);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Summary',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Summary',
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                      color: Theme.of(context).appBarTheme.foregroundColor ??
+                          Theme.of(context).colorScheme.onPrimary,
+                      width: 1.5,
+                      style: BorderStyle.solid),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: GestureDetector(
+                  onTap: () => _pickMonth(context),
+                  child: Text(
+                    formattedMonth,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color:
+                              Theme.of(context).appBarTheme.foregroundColor ??
+                                  Theme.of(context).colorScheme.onPrimary,
+                          fontSize: 16,
+                        ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.calendar_month),
-            onPressed: () => _pickMonth(context),
-          ),
-        ],
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
       body: FutureBuilder(
@@ -123,64 +152,68 @@ class _SummaryScreenState extends ConsumerState<SummaryScreen> {
             double totalExpense = snapshot.data![1];
             double netBalance = totalIncome - totalExpense;
 
-            return Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ListTile(
-                    title: Text(
-                      'Total Income:',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(),
-                    ),
-                    trailing: Text(
-                      '$currency ${totalIncome.toStringAsFixed(2)}',
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 74, 3, 56),
+            return SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ListTile(
+                      title: Text(
+                        'Total Income:',
+                        style:
+                            Theme.of(context).textTheme.bodyMedium?.copyWith(),
                       ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  ListTile(
-                    title: Text(
-                      'Total Expense:',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(),
-                    ),
-                    trailing: Text(
-                      '$currency ${totalExpense.toStringAsFixed(2)}',
-                      style: const TextStyle(
+                      trailing: Text(
+                        '$currency ${totalIncome.toStringAsFixed(2)}',
+                        style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 74, 3, 56)),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Divider(
-                    color: Colors.grey,
-                    thickness: 1.5,
-                  ),
-                  ListTile(
-                    title: Text(
-                      'Net Balance:',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium
-                          ?.copyWith(color: Color.fromARGB(255, 9, 95, 12)),
-                    ),
-                    trailing: Text(
-                      '$currency ${netBalance.toStringAsFixed(2)}',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: netBalance >= 0
-                            ? Color.fromARGB(255, 9, 95, 12)
-                            : Colors.red,
+                          color: Color.fromARGB(255, 74, 3, 56),
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 10),
+                    ListTile(
+                      title: Text(
+                        'Total Expense:',
+                        style:
+                            Theme.of(context).textTheme.bodyMedium?.copyWith(),
+                      ),
+                      trailing: Text(
+                        '$currency ${totalExpense.toStringAsFixed(2)}',
+                        style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromARGB(255, 74, 3, 56)),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Divider(
+                      color: Colors.grey,
+                      thickness: 1.5,
+                    ),
+                    ListTile(
+                      title: Text(
+                        'Net Balance:',
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium
+                            ?.copyWith(color: Color.fromARGB(255, 9, 95, 12)),
+                      ),
+                      trailing: Text(
+                        '$currency ${netBalance.toStringAsFixed(2)}',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: netBalance >= 0
+                              ? Color.fromARGB(255, 9, 95, 12)
+                              : Colors.red,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             );
           }
