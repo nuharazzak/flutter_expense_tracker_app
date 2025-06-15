@@ -44,6 +44,8 @@ dependencies:
   month_picker_dialog: ^6.0.3
   flutter_riverpod: ^2.6.1
   flutter_staggered_animations: ^1.1.1
+  share_plus: ^7.2.1
+  url_launcher: ^6.2.6
   
 
 dev_dependencies:

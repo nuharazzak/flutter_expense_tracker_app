@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_expense_tracker_app/provider/currency_provider.dart';
+import 'package:my_expense_tracker_app/screen/privacy_screen.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsScreen extends ConsumerWidget {
   SettingsScreen({super.key});
@@ -78,23 +81,37 @@ class SettingsScreen extends ConsumerWidget {
           final items = [
             {
               'icon': Icons.person,
-              'title': 'Account',
+              'title': 'Recommend to friends',
               'onTap': () {
-                // Handle account tap
+                Share.share(
+                  'Check out this awesome expense tracker app! Download it here: https://your-app-link.com',
+                  subject: 'My Expense Tracker App',
+                );
               },
             },
             {
               'icon': Icons.login,
-              'title': 'Login',
-              'onTap': () {
-                // Handle account tap
+              'title': 'Rate the app',
+              'onTap': () async {
+                final url = Uri.parse(
+                    'https://play.google.com/store/apps/details?id=com.yourcompany.yourapp'); // <-- Replace with your real app link
+                if (await canLaunchUrl(url)) {
+                  await launchUrl(url, mode: LaunchMode.externalApplication);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                        content: Text('Could not open the store page.')),
+                  );
+                }
               },
             },
             {
               'icon': Icons.lock,
               'title': 'Privacy',
               'onTap': () {
-                // Handle account tap
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => PrivacyScreen()),
+                );
               },
             },
             {
