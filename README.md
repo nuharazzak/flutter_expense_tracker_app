@@ -1,16 +1,71 @@
-# my_expense_tracker_app
+# My Smart Wallet
 
-A new Flutter project.
+A simple and modern Flutter expense tracker app to help you manage your finances.
+
+## Features
+
+- Add, edit, and delete expenses and incomes
+- View monthly summaries
+- Category selection with icons
+- Chart view
+- Currency selection
+- Privacy policy page
+- Responsive design for mobile and tablet
+
+
+## Screenshots
+
+<!-- Add screenshots here -->
+<!-- ![Home Screen](screenshots/home.png) -->
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+### Prerequisites
 
-A few resources to get you started if this is your first Flutter project:
+- [Flutter](https://flutter.dev/docs/get-started/install) (latest stable)
+- Android Studio or VS Code
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### Installation
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1. **Clone the repository:**
+    ```sh
+    git clone https://github.com/yourusername/flutter_expense_tracker_app.git
+    cd flutter_expense_tracker_app
+    ```
+
+2. **Install dependencies:**
+    ```sh
+    flutter pub get
+    ```
+
+3. **Run the app:**
+    ```sh
+    flutter run
+    ```
+
+## Building for Release
+
+### Android
+
+```sh
+flutter build apk --release
+
+```
+
+## Folder Structure
+
+```
+lib/
+  ├── main.dart
+  ├── screen/
+  ├── model/
+  └── provider/
+```
+
+## Privacy Policy
+
+See the [Privacy Policy](lib/screen/privacy_screen.dart) in the app.
+
+
+
+**Made with Flutter ❤️**
