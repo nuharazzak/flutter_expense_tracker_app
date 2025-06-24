@@ -36,7 +36,7 @@ void main() async {
             unselectedItemColor:
                 kColorScheme.onPrimaryContainer.withValues(alpha: 0.5),
           ),
-          cardTheme: const CardTheme().copyWith(
+          cardTheme: CardThemeData(
             color: kColorScheme.secondaryContainer,
             margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
           ),
@@ -106,8 +106,8 @@ void main() async {
             unselectedItemColor:
                 kDarkColorScheme.onPrimaryContainer.withOpacity(0.5),
           ),
-          cardTheme: CardTheme(
-            color: kDarkColorScheme.secondaryContainer,
+          cardTheme: CardThemeData(
+            color: kColorScheme.secondaryContainer,
             margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
           ),
           elevatedButtonTheme: ElevatedButtonThemeData(
