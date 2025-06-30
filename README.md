@@ -17,6 +17,45 @@ A simple and modern Flutter expense tracker app to help you manage your finances
 
 <!-- Add screenshots here -->
 <!-- ![Home Screen](screenshots/home.png) -->
+**Summary Screen**  
+![Summary Screen](screenshots/summary.jpg)
+
+**Chart Screen**  
+![Chart Screen](screenshots/chart.jpg)
+
+**Expense Screen**  
+![Expense Screen](screenshots/expense.jpg)
+
+**Income Screen**  
+![Income Screen](screenshots/incomes.jpg)
+
+**Settings Screen**  
+![Settings Screen](screenshots/settings.jpg)
+
+**Get Add Buttons**  
+![Get Add Buttons](screenshots/add_buttons.jpg)
+
+**Select Expense Category**  
+![Select Expense Category](screenshots/select_expense.jpg)
+
+**Select Income Category**  
+![Select Income Category](screenshots/select_income.jpg)
+
+**Add Expense Screen**  
+![Add Expense Screen](screenshots/add_expense.jpg)
+
+**Add Income Screen**  
+![Add Income Screen](screenshots/add_income.jpg)
+
+**Select Currency**  
+![Select Currency](screenshots/select_currency.jpg)
+
+**Select by Month**  
+![Select by Month](screenshots/selectby_month.jpg)
+
+
+
+
 
 ## Getting Started
 
