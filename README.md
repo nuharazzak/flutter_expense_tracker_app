@@ -1,4 +1,4 @@
-# My Smart Wallet
+# Flutter Expense Tracker App
 
 A simple and modern Flutter expense tracker app to help you manage your finances.
 
