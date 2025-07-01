@@ -17,41 +17,53 @@ A simple and modern Flutter expense tracker app to help you manage your finances
 
 <!-- Add screenshots here -->
 <!-- ![Home Screen](screenshots/home.png) -->
-**Summary Screen**  
-![Summary Screen](screenshots/summary.jpg)
+**Summary Screen** 
+<img src="screenshots/summary.jpg" width="200"/> 
+
 
 **Chart Screen**  
-![Chart Screen](screenshots/chart.jpg)
+<img src="screenshots/chart.jpg" width="200"/>
+
 
 **Expense Screen**  
-![Expense Screen](screenshots/expense.jpg)
+<img src="screenshots/expense.jpg" width="200"/>
+
 
 **Income Screen**  
-![Income Screen](screenshots/incomes.jpg)
+<img src="screenshots/incomes.jpg" width="200"/>
 
-**Settings Screen**  
-![Settings Screen](screenshots/settings.jpg)
+
+**Settings Screen** 
+<img src="screenshots/settings.jpg" width="200"/> 
+
 
 **Get Add Buttons**  
-![Get Add Buttons](screenshots/add_buttons.jpg)
+<img src="screenshots/add_buttons.jpg" width="200"/>
+
 
 **Select Expense Category**  
-![Select Expense Category](screenshots/select_expense.jpg)
+<img src="screenshots/select_expense.jpg" width="200"/>
+
 
 **Select Income Category**  
-![Select Income Category](screenshots/select_income.jpg)
+<img src="screenshots/select_income.jpg" width="200"/>
+
 
 **Add Expense Screen**  
-![Add Expense Screen](screenshots/add_expense.jpg)
+<img src="screenshots/add_expense.jpg" width="200"/>
+
 
 **Add Income Screen**  
-![Add Income Screen](screenshots/add_income.jpg)
+<img src="screenshots/add_income.jpg" width="200"/>
+
 
 **Select Currency**  
-![Select Currency](screenshots/select_currency.jpg)
+<img src="screenshots/select_currency.jpg" width="200"/>
+
 
 **Select by Month**  
-![Select by Month](screenshots/selectby_month.jpg)
+<img src="screenshots/selectby_month.jpg" width="200"/>
+
 
 
 
